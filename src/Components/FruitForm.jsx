@@ -1,14 +1,22 @@
 import { push, ref, set } from "firebase/database";
-import { realTimeDatabase } from "../firebase";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { realTimeDatabase, storage } from "../firebase";
 import { useState } from "react";
 
 const REALTIME_DATABASE_KEY = "fruits";
+const STORAGE_KEY = "images/";
 
 export default function FruitForm() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [fileInputFile, setFileInputFile] = useState(null);
+  const [fileInputValue, setFileInputValue] = useState("");
 
-  const writeData = () => {
+  const writeData = (url) => {
     const fruitListRef = ref(realTimeDatabase, REALTIME_DATABASE_KEY);
     const newFruitRef = push(fruitListRef);
 
@@ -16,11 +24,27 @@ export default function FruitForm() {
       name: name,
       description: description,
       date: new Date().toLocaleTimeString(),
+      url: url,
     });
 
     setName("");
     setDescription("");
+    setFileInputFile(null);
+    setFileInputValue("");
   };
+
+  const submit = () => {
+    const fullStorageRef = storageRef(
+      storage,
+      STORAGE_KEY + fileInputFile.name
+    );
+    uploadBytes(fullStorageRef, fileInputFile).then(() => {
+      getDownloadURL(fullStorageRef, fileInputFile.name).then((url) => {
+        writeData(url);
+      });
+    });
+  };
+
   return (
     <div>
       <h1>Fruit Form</h1>
@@ -45,7 +69,18 @@ export default function FruitForm() {
         onChange={(e) => setDescription(e.target.value)}
       />
       <br />
-      <button onClick={writeData}>Submit Data</button>
+      <label>Image</label>
+      <br />
+      <input
+        type="file"
+        name="file"
+        value={fileInputValue}
+        onChange={(e) => {
+          setFileInputFile(e.target.files[0]);
+          setFileInputValue(e.target.file);
+        }}
+      />
+      <button onClick={submit}>Submit Data</button>
     </div>
   );
 }

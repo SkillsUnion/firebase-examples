@@ -29,6 +29,11 @@ export default function FruitList() {
                     {fruitItem.val.name} - {fruitItem.val.date}
                   </h2>
                   <p>{fruitItem.val.description}</p>
+                  {fruitItem.val.url ? (
+                    <img src={fruitItem.val.url} alt={fruitItem.val.name} />
+                  ) : (
+                    <p>No images</p>
+                  )}
                 </div>
               </li>
             ))
