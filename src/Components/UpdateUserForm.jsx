@@ -12,7 +12,6 @@ export default function FruitForm(props) {
       photoURL: photoUrl,
     })
       .then(() => {
-        console.log("success");
         auth.currentUser.reload().then(() => {
           const user = auth.currentUser;
           props.setUser(user);
