@@ -3,6 +3,7 @@ import { auth } from "../firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 export default function AuthForm() {
@@ -46,6 +47,9 @@ export default function AuthForm() {
 
       <button onClick={signUp}>SignUp</button>
       <button onClick={signIn}>SignIn</button>
+      <button onClick={() => sendPasswordResetEmail(auth, email)}>
+        Forgotten Password?
+      </button>
     </div>
   );
 }
