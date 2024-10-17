@@ -1,4 +1,4 @@
-# Rocket Academy Coding Bootcamp: Firebase
+# Firebase
 
 ## Available Scripts
 
